@@ -29,7 +29,7 @@ const port1 = process.env.MAIN_PORT;
 var app_port = process.env.MAIN_PORT || process.env.PORT || 80;
 var app_host = process.env.MAIN_HOST || '0.0.0.0';
 app.listen(app_port, app_host, function() {
-    console.log('Listening on port %d', server_port);
+    console.log('Listening on port %d', app_port);
 });
 app.listen(port1, () => console.log(`API Server is running on port ${port1}`));
 
