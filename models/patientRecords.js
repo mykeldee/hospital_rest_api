@@ -6,7 +6,7 @@ const recordSchema = new mongoose.Schema({
     pressure: Number,
     weight: Number,
     temperature: Number,
-    symptoms: { type:String },
+    symptoms: { type:String, required:true },
     diagnosis: { type:String },
     recommendation: { type:String },
     doctorAssigned: { type:String },

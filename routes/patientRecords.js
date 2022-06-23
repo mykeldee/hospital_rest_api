@@ -16,7 +16,7 @@ router.post ("/record/add", async (req,res) => {
     console.log(patient);
     //if user does not exist, send a 404 response
     if (patient == null) {
-        res.status(404).send("Patient does not exist!")
+        res.status(404).json({ message: "Patient does not exist!" })
     } else {    
         try{
             const { pressure, temperature, weight, symptoms, recommendation, diagnosis, patientID, doctorAssigned  } = req.body;
@@ -36,7 +36,7 @@ router.post ("/record/add", async (req,res) => {
             }]);
             console.log(record);
         } catch (err) {
-            //res.status(401).send([{message: 'Operation Failed'}, { error: err }])
+            res.status(401).send([{message: 'Operation Failed'}, { error: [err.message, err.status] }])
             console.log(err);
         }
     }
