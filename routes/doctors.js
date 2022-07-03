@@ -2,6 +2,7 @@ const express = require('express');
 const router = express();
 const Doctor = require('../models/doctors');
 const cors = require("cors");
+const jwtValidate = require("../middlewares/jwt");
 
 router.use(express());
 router.use(express.json());
@@ -24,9 +25,18 @@ router.post ("/doctor/add", async (req,res) => {
          }]);
         console.log(doctor);
     } catch (err) {
-        //res.status(401).send([{message: 'Operation Failed'}, { error: err }])
-        console.log(err);
+        res.status(401).send([{message: 'Operation Failed'}, { error: err }])
     }
     });
+
+router.get('/doctors/', jwtValidate, async (req, res) => {
+    try{
+        const records = await Doctor.find();
+        res.status(200).json(records);
+    } catch (err) {
+    res.status(500).send([{message: 'Operation Failed'}, { error: err.message }]);
+    console.log(err);
+}
+});
     
 module.exports = router;

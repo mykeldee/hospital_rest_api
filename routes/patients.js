@@ -4,6 +4,7 @@ const Patient = require('../models/patients');
 const ID = require('../models/ids');
 const cors = require("cors");
 const { isNull } = require('lodash');
+const jwtValidate = require("../middlewares/jwt");
 
 router.use(express());
 router.use(express.json());
@@ -60,6 +61,17 @@ router.post ('/patient/add', async (req, res) => {
         console.log(err);
     }
     });
+
+    router.get('/patients/', jwtValidate, async (req, res) => {
+        try{
+            const records = await Patient.find();
+            res.status(200).json(records);
+        } catch (err) {
+        res.status(500).send([{message: 'Operation Failed'}, { error: err.message }]);
+        console.log(err);
+    }
+    });
+        
 
 
 

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const validator = require('email-validator');
 const express = require('express');
 const router = express();
@@ -5,10 +6,25 @@ const User = require('../models/users');
 const cors = require("cors");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const { passwordStrength } = require('check-password-strength');
+const jwt = require('jsonwebtoken');
+const jwtValidate = require('../middlewares/jwt')
 
 router.use(express());
 router.use(express.json());
 router.use(cors());
+
+tka = process.env.ACCESS_TOKEN_SECRET
+function generateAccessToken(email) {
+    return jwt.sign(email, tka, { expiresIn: '60s' });
+  };
+
+tkf = process.env.REFRESS_TOKEN_SECRET
+let refreshTokens = []
+function generateRefreshToken(email) {
+    const refreshToken =  jwt.sign(email, tkf, {expiresIn: "1800s"})
+    // refreshTokens.push(refreshToken)
+    return refreshToken
+    };
 
 //Register User
 router.post('/register', async (req, res) => {
@@ -58,13 +74,10 @@ router.post("/login", async (req,res) => {
         }
 
         else if (user && (await bcrypt.compare(password, user.password))) {
-        // //if user does not exist, send a 400 response
-
-        // const accessToken = generateAccessToken ({user: req.body.name})
-        // const refreshToken = generateRefreshToken ({user: req.body.name})
-        // res.status(200).json({accessToken: accessToken, refreshToken: refreshToken});
-        res.status(200).json({name: `${user.firstName} ${user.lastName}`});
-        //console.log({user: user.name, accessToken: accessToken, refreshToken: refreshToken});
+        const accessToken = generateAccessToken ({user: req.body.email});
+        const refreshToken = generateRefreshToken ({user: req.body.email});
+        res.status(200).json({name: `${user.firstName} ${user.lastName}`, accessToken: accessToken, refreshToken: refreshToken});
+        console.log(accessToken);
     } else {
     res.status(401).send("Password Incorrect!")
     }

@@ -3,6 +3,7 @@ const router = express();
 const Record = require('../models/patientRecords');
 const Patient = require('../models/patients');
 const cors = require("cors");
+const jwtValidate = require("../middlewares/jwt");
 
 router.use(express());
 router.use(express.json());
@@ -43,7 +44,7 @@ router.post ("/record/add", async (req,res) => {
     });
 
 //Retrieve Patient Records
-router.get('/patient/:id', (req, res) => {
+router.get('/patient/:id', jwtValidate, (req, res) => {
     try{
         Patient.findOne({id: req.params.id}).then(async (result) => {
         //Patient.findById(req.params.id).then(async (result) => {
